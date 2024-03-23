@@ -47,7 +47,7 @@ namespace StartupNNTM.Service
             {
                 { () => user == null, "Tài khoản không tồn tại" },
                 { () => user.LockoutEnabled && user.AccessFailedCount == -1, "Tài khoản bị khóa vĩnh viễn" },
-                { () => user.LockoutEnabled, "Tài khoản bị khóa" },
+                { () => !user.LockoutEnabled, "Tài khoản bị khóa" },
                 { () => true, "ok" },
             };
             var errorMessage = errorMessages.First(kv => kv.Key()).Value;
@@ -155,11 +155,9 @@ namespace StartupNNTM.Service
 
                 user = new User()
                 {
-                    Id = Guid.NewGuid(),
                     UserName = request.Email,
                     Fullname = request.Email,
                     Email = request.Email,
-                    LockoutEnabled = false,
                     EmailConfirmed = true,
                 };
 
@@ -167,8 +165,8 @@ namespace StartupNNTM.Service
 
                 if (result.Succeeded)
                 {
-                    var role = "student";
-                    var getUser = await _dataContext.Users.FirstOrDefaultAsync(x => x.Email.Equals(request.Email));
+                    var role = "user";
+                    var getUser = await _userManager.FindByEmailAsync(request.Email);
                     if (getUser != null)
                     {
                         await _userManager.AddToRoleAsync(getUser, role);
@@ -190,7 +188,7 @@ namespace StartupNNTM.Service
             MailContent content = new()
             {
                 To = email,
-                Subject = "Yêu cầu xác nhận email từ [Người Kể Sử]",
+                Subject = "Yêu cầu xác nhận email từ [Nông nghiệp thông minh & thực phẩm sạch]",
                 Body = $@"<!DOCTYPE html>
                 <html lang=""en"">
                 <head>
@@ -252,7 +250,7 @@ namespace StartupNNTM.Service
                         </h1>
                       </header>
                       <div class=""panel__content"" style=""font-family: Montserrat; font-size: 14px;"">
-                        Chúng tôi đã nhận yêu cầu xác thực tài khoản web <strong>Tên website</strong> của bạn. Mã dùng một lần của bạn là:
+                        Xin chào! Chúng tôi đã nhận yêu cầu xác thực tài khoản web <strong>Tên website</strong> của bạn. Mã dùng một lần của bạn là:
                         <br>
                         <div style=""font-size: 4em; text-align: center"">
                           {confirmNumber}

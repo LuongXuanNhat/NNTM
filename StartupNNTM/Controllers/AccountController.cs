@@ -22,7 +22,6 @@ namespace StartupNNTM.Controllers
         }
 
         [HttpPost("Login")]
-        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody]LoginRequest request)
         {
             var result = await _account.Authenticate(request);

@@ -12,8 +12,8 @@ using StartupNNTM.Models;
 namespace StartupNNTM.Migrations
 {
     [DbContext(typeof(NntmContext))]
-    [Migration("20240319095829_add_email_get_code_table")]
-    partial class add_email_get_code_table
+    [Migration("20240322060255_add_role")]
+    partial class add_role
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -276,6 +276,20 @@ namespace StartupNNTM.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("509450fa-7e51-4fbc-baa2-cd3b2bfffa91"),
+                            Name = "admin",
+                            NormalizedName = "admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("74a4e0a7-6e10-4810-baef-127f62e72e59"),
+                            Name = "user",
+                            NormalizedName = "user"
+                        });
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Type", b =>

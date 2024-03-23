@@ -12,8 +12,8 @@ using StartupNNTM.Models;
 namespace StartupNNTM.Migrations
 {
     [DbContext(typeof(NntmContext))]
-    [Migration("20240319075708_Init")]
-    partial class Init
+    [Migration("20240322054808_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -152,6 +152,28 @@ namespace StartupNNTM.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("Chat");
+                });
+
+            modelBuilder.Entity("StartupNNTM.Models.EmailGetCode", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EmailName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmailGetCode");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Message", b =>
@@ -293,7 +315,7 @@ namespace StartupNNTM.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("EmailGetCode")
+                    b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 

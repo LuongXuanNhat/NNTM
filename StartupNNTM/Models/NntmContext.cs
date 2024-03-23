@@ -49,10 +49,14 @@ namespace StartupNNTM.Models
             builder.Entity<Post>(entity =>
             {
                 entity.HasOne(e => e.Type).WithMany(e => e.Post).HasForeignKey(e => e.TypeId);
+                entity.HasOne(e => e.Address).WithMany(e => e.Post).HasForeignKey(e => e.AddressId);
+                entity.HasMany(e => e.Images).WithOne(e => e.Post).HasForeignKey(e => e.PostId);
             });
 
 
             builder.Entity<IdentityUserRole<Guid>>().HasKey(x => new { x.UserId, x.RoleId });
+
+            new SeedingData(builder).Seed();
         }
     }
 }

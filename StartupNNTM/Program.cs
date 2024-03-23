@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 var connectionString = builder.Environment.IsDevelopment()
-                                 ? builder.Configuration.GetConnectionString("LocalDataConnect")
+                                 ? builder.Configuration.GetConnectionString("DataConnect")
                                  : builder.Configuration.GetConnectionString("DataConnect");
 builder.Services.AddDbContext<NntmContext>(options =>
 {
@@ -54,6 +54,12 @@ builder.Services.AddSwaggerGen();
             ClockSkew = System.TimeSpan.Zero,
             IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes)
         };
+    })
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login"; // Đường dẫn đến trang đăng nhập
+        options.AccessDeniedPath = "/Account/AccessDenied"; // Đường dẫn đến trang truy cập bị từ chối
+        options.SlidingExpiration = true; // Thời gian hết hạn tự động được gia hạn khi người dùng thực hiện các hoạt động xác thực
     });
 #endregion
 
@@ -62,6 +68,7 @@ builder.Services.AddSwaggerGen();
     builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<NntmContext>().AddDefaultTokenProviders();
   // builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
     builder.Services.AddScoped<IAccountService, AccountService>();
+    builder.Services.AddScoped<IPostService, PostService>();
     builder.Services.AddDistributedMemoryCache();
     builder.Services.AddOptions();
     builder.Services.AddSession();
@@ -73,9 +80,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularDev", builder =>
+    options.AddDefaultPolicy( builder =>
     {
-        builder.WithOrigins("http://localhost:4200", "https://luongxuannhat.github.io", "https://toiyeulichsu.com")
+        builder.WithOrigins("http://localhost:4200", "https://luongxuannhat.github.io", "https://localhost:4200")
                .AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials();
@@ -85,18 +92,17 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+
 
 app.UseStaticFiles();
 app.UseForwardedHeaders();
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors("AllowAngularDev");
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

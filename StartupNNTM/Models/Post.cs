@@ -9,16 +9,18 @@ namespace StartupNNTM.Models
         [Key]
         public string Id { get; set; }
         public string Title { get; set; }
-        public string Address { get; set; }
-        public string Acreage { get; set; }
+        public Guid AddressId { get; set; }
+        public string Price { get; set; }
         public string Content { get; set; }
         public Guid TypeId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public Guid UserId { get; set; }
-        public bool IsActivate { get; set; }
 
         public ICollection<Chat> Chat { get; set; }
         public Type Type { get; set; }
+        public Address Address { get; set; }
+        public ICollection<Image> Images { get; set; }
     }
 }
+
