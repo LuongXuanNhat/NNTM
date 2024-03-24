@@ -389,7 +389,21 @@ namespace StartupNNTM.Service
             }
             return new ApiSuccessResult<string>();
         }
-
+        public async Task<ApiResult<string>> ResetPassword(ResetPassDto resetPass)
+        {
+            var user = await _userManager.FindByEmailAsync(resetPass.Email);
+            if (user is null)
+            {
+                return new ApiErrorResult<string>("Email chưa được đăng ký tài khoản");
+            }
+            var resetPasswordResult = await _userManager.ResetPasswordAsync(user, resetPass.Token, resetPass.Password);
+            if (!resetPasswordResult.Succeeded)
+            {
+                //  _logger.LogError("Xảy ra lỗi trong quá trình xử lý | ", resetPasswordResult.Errors.Select(e => e.Description));
+                return new ApiErrorResult<string>("Lỗi! " + resetPasswordResult.Errors.Select(e => e.Description));
+            }
+            return new ApiSuccessResult<string>();
+        }
         public async Task LockAccount(User user)
         {
             user.LockoutEnabled = true;
