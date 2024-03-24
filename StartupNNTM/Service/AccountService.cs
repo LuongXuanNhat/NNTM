@@ -132,13 +132,13 @@ namespace StartupNNTM.Service
                 return new ApiErrorResult<string>("Tài khoản bị khóa vĩnh viễn");
             }
 
-            var confirmNumber = GetConfirmCode();
+            var confirmNumber = "NoViSo@" + GetConfirmCode();
+            // reset
 
             await SendPasswordToEmail(user.Email, confirmNumber);
             var obj = await ConfirmCode(email);
+            obj.Password = confirmNumber;
 
-            // reset
-            obj.Password = "NoViSo@"+confirmNumber;
             return await ResetPassword(obj, user);
         }
         public async Task<ApiResult<string>> Register(RegisterRequest request)
