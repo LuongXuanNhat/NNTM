@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StartupNNTM.Service;
 
 namespace StartupNNTM.Controllers
 {
@@ -6,9 +7,18 @@ namespace StartupNNTM.Controllers
     [Route("Post")]
     public class PostController : ControllerBase
     {
-        public PostController() { 
-        
+
+        private readonly IPostService _postService;
+
+        public PostController(IPostService postService) { 
+            _postService = postService;
         }
+
+/*
+        [HttpGet("Discover")]
+        public async  Task<IActionResult> Index()
+        {
+        }*/
 
 
     }

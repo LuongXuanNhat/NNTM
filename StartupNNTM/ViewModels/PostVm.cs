@@ -10,6 +10,6 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string UserId { get; set; }
-        public ICollection<IFormFile> Images { get; set; }
+        public IEnumerable<IFormFile> Images { get; set; }
     }
 }

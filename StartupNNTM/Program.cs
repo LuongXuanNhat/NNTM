@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
+using StartupNNTM.Mapper;
 using StartupNNTM.Models;
 using StartupNNTM.Service;
 using StartupNNTM.ViewModels;
@@ -26,6 +28,7 @@ builder.Services.AddDbContext<NntmContext>(options =>
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 #region JWT Authentication Configuration
     string issuer = builder.Configuration.GetValue<string>("Tokens:Issuer");
@@ -69,7 +72,13 @@ builder.Services.AddSwaggerGen();
   // builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
     builder.Services.AddScoped<IAccountService, AccountService>();
     builder.Services.AddScoped<IPostService, PostService>();
-    builder.Services.AddDistributedMemoryCache();
+    builder.Services.AddScoped<IImageService, ImageService>();
+    builder.Services.AddScoped<IAddressService, AddressService>();
+    builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+
+
+builder.Services.AddDistributedMemoryCache();
     builder.Services.AddOptions();
     builder.Services.AddSession();
     var mailsettings = builder.Configuration.GetSection("MailSettings");

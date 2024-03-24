@@ -20,6 +20,10 @@ namespace StartupNNTM.Models
         public DbSet<Post> Posts { get; set; }
         public DbSet<Type> Types { get; set; }
         public DbSet<EmailGetCode> EmailGetCodes { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<Province> Provinces { get; set; }
+        public DbSet<Ward> Wards { get; set; }
+        public DbSet<District> Districts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
