@@ -71,14 +71,14 @@ namespace StartupNNTM.Controllers
         public async Task<IActionResult> RegisterUser([FromBody] RegisterRequest request)
         {
             var result = await _account.Register(request);
-            return result.IsSuccessed ? Ok(result) : BadRequest(result);
+            return Ok(result);
         }
 
         [HttpPost("GetCode")]
         public async Task<IActionResult> GetCode(string email)
         {
             var result = await _account.GetCode(email);
-            return result.IsSuccessed ? Ok(result) : BadRequest(result);
+            return Ok(result);
         }
 
         [HttpGet("ForgetPassword")]
@@ -88,19 +88,19 @@ namespace StartupNNTM.Controllers
             return Ok(result);
         }
 
-        [HttpGet("ForgetPassword/ConfirmCode")]
-        [AllowAnonymous]
-        public async Task<IActionResult> ConfirmCode([FromQuery] string email)
-        {
-            var result = await _account.ConfirmCode(email);
-            return result.IsSuccessed ? Ok(result) : BadRequest(result);
-        }
+        //[HttpGet("ForgetPassword/ConfirmCode")]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> ConfirmCode([FromQuery] string email)
+        //{
+        //    var result = await _account.ConfirmCode(email);
+        //    return Ok(result);
+        //}
 
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPassDto resetPass)
         {
             var result = await _account.ResetPassword(resetPass);
-            return result.IsSuccessed ? Ok(result) : BadRequest(result);
+            return Ok(result);
 
         }
 
@@ -110,7 +110,7 @@ namespace StartupNNTM.Controllers
         {
             //// var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var result = await _account.ChangeEmail(User.Identity.Name, email);
-            return result.IsSuccessed ? Ok(result) : BadRequest(result);
+            return Ok(result);
         }
 
         [HttpPost("ChangePassword")]
@@ -118,7 +118,7 @@ namespace StartupNNTM.Controllers
         public async Task<IActionResult> ChanggPassword(ChangePasswordDto changePasswodDto)
         {
             var result = await _account.ChangePassword(changePasswodDto);
-            return result.IsSuccessed ? Ok(result) : BadRequest(result);
+            return Ok(result);
         }
     }
 }

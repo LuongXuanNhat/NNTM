@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using Org.BouncyCastle.Crypto;
 using StartupNNTM.Models;
 using StartupNNTM.ViewModels;
 
@@ -43,13 +40,13 @@ namespace StartupNNTM.Service
                 await _dataContext.SaveChangesAsync();
                 post.Images = await SaveImagesAsync(post.Id, request.Images);
 
-          
 
 
+                return new ApiSuccessResult<PostVm>(new());
              }
             catch (Exception ex)
             {
-
+                return new ApiErrorResult<PostVm>(ex.Message);
             }
 
         }

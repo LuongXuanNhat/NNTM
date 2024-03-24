@@ -97,7 +97,7 @@ namespace StartupNNTM.Service
 
 
         // Confirm Code to Reset Password
-        public async Task<ApiResult<ResetPassDto>> ConfirmCode(string email)
+        public async Task<ResetPassDto> ConfirmCode(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -106,7 +106,7 @@ namespace StartupNNTM.Service
                 Email = email,
                 Token = token
             };
-            return new ApiSuccessResult<ResetPassDto>(result);
+            return result;
         }
 
         public async Task<ApiResult<string>> EmailConfirm(string numberConfirm, string email)
@@ -120,16 +120,16 @@ namespace StartupNNTM.Service
             return new ApiErrorResult<string>("Mã code không chính xác");
         }
 
-        public async Task<ApiResult<LoginRequest>> ForgetPassword(string email)
+        public async Task<ApiResult<string>> ForgetPassword(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user is null)
             {
-                return new ApiErrorResult<LoginRequest>("Email chưa được đăng ký tài khoản");
+                return new ApiErrorResult<string>("Email chưa được đăng ký tài khoản");
             }
             if (user.AccessFailedCount is -1)
             {
-                return new ApiErrorResult<LoginRequest>("Tài khoản bị khóa vĩnh viễn");
+                return new ApiErrorResult<string>("Tài khoản bị khóa vĩnh viễn");
             }
 
             var confirmNumber = GetConfirmCode();
@@ -137,14 +137,11 @@ namespace StartupNNTM.Service
 
 
             await SendConfirmCodeToEmail(user.Email, confirmNumber);
+            var obj = await ConfirmCode(email);
 
-            var result = new LoginRequest()
-            {
-                Email = email,
-                Password = confirmNumber
-            };
-
-            return new ApiSuccessResult<LoginRequest>(result);
+            // reset
+            obj.Password = confirmNumber;
+            return await ResetPassword(obj);
         }
         public async Task<ApiResult<string>> Register(RegisterRequest request)
         {
@@ -358,6 +355,11 @@ namespace StartupNNTM.Service
 
         public async Task<ApiResult<string>> GetCode(string email)
         {
+            var user = await _userManager.FindByEmailAsync(email);
+            if(user != null)
+            {
+                return new ApiErrorResult<string>("Email này đã đăng ký tài khoản");
+            }
             var code = new EmailGetCode()
             {
                 Id = Guid.NewGuid(),
