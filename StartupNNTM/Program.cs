@@ -1,13 +1,9 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
-using StartupNNTM.Mapper;
 using StartupNNTM.Models;
 using StartupNNTM.Service;
 using StartupNNTM.ViewModels;
@@ -29,13 +25,13 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 #region JWT Authentication Configuration
     string issuer = builder.Configuration.GetValue<string>("Tokens:Issuer");
     string signingKey = builder.Configuration.GetValue<string>("Tokens:Key");
     byte[] signingKeyBytes = System.Text.Encoding.UTF8.GetBytes(signingKey);
 
-    builder.Services.AddAuthentication(opt =>
+builder.Services
+    .AddAuthentication(opt =>
     {
         opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -60,17 +56,28 @@ builder.Services.AddSwaggerGen();
     })
     .AddCookie(options =>
     {
-        options.LoginPath = "/Login"; // Đường dẫn đến trang đăng nhập
-        options.AccessDeniedPath = "/Account/AccessDenied"; // Đường dẫn đến trang truy cập bị từ chối
-        options.SlidingExpiration = true; // Thời gian hết hạn tự động được gia hạn khi người dùng thực hiện các hoạt động xác thực
+        options.LoginPath = "/UserShort/Login";
+        options.LogoutPath = "/UserShort/Signup";
+        options.AccessDeniedPath = "/UserShort/Forbidden/";
+
+        options.CookieManager = new ChunkingCookieManager();
+
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     });
+
 #endregion
 
 #region Service
 
-    builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<NntmContext>().AddDefaultTokenProviders();
-  // builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
-    builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<NntmContext>().AddDefaultTokenProviders();
+    builder.Services.Configure<IdentityOptions>(options =>
+    {
+        options.Lockout.AllowedForNewUsers = false;
+    });
+// builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IAccountService, AccountService>();
     builder.Services.AddScoped<IPostService, PostService>();
     builder.Services.AddScoped<IImageService, ImageService>();
     builder.Services.AddScoped<IAddressService, AddressService>();
@@ -102,10 +109,15 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-    app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwagger();
+app.UseSwaggerUI();
 
-
+app.Use(async (context, next) =>
+{
+    app.Logger.LogInformation("Request RemoteIp: {RemoteIpAddress}",
+        context.Connection.RemoteIpAddress);
+    await next(context);
+});
 app.UseStaticFiles();
 app.UseForwardedHeaders();
 app.UseSession();
