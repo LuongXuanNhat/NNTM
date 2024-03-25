@@ -8,5 +8,6 @@ namespace StartupNNTM
         public const string ConnectString = "Data Source=SQL5106.site4now.net;Initial Catalog=db_aa6c32_vuanhpham2503;User Id=db_aa6c32_vuanhpham2503_admin;Password=30102002Mai;";
         public const string Token = "Token";
         public const string BaseAddress = "BaseAddress";
+        public const string UrlWeb = "https://localhost:7070";
     }
 }

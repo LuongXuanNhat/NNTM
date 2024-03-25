@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StartupNNTM.Models;
 
@@ -11,9 +12,11 @@ using StartupNNTM.Models;
 namespace StartupNNTM.Migrations
 {
     [DbContext(typeof(NntmContext))]
-    partial class NntmContextModelSnapshot : ModelSnapshot
+    [Migration("20240325031335_add_data3")]
+    partial class add_data3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,34 +25,27 @@ namespace StartupNNTM.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Address", b =>
+            modelBuilder.Entity("AddressVm", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Detail")
+                    b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DistrictId")
-                        .HasColumnType("int");
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProvinceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WardId")
-                        .HasColumnType("int");
+                    b.Property<string>("Ward")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DistrictId");
-
-                    b.HasIndex("ProvinceId");
-
-                    b.HasIndex("WardId");
-
-                    b.ToTable("Address", (string)null);
+                    b.ToTable("AddressVm");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -181,7 +177,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdministrativeRegion", (string)null);
+                    b.ToTable("AdministrativeRegion");
 
                     b.HasData(
                         new
@@ -284,7 +280,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdministrativeUnit", (string)null);
+                    b.ToTable("AdministrativeUnit");
 
                     b.HasData(
                         new
@@ -415,7 +411,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Chat", (string)null);
+                    b.ToTable("Chat");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.District", b =>
@@ -446,16 +442,20 @@ namespace StartupNNTM.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProvinceId")
+                    b.Property<string>("ProvinceCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("provinceId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AdministrativeUnitId");
 
-                    b.HasIndex("ProvinceId");
+                    b.HasIndex("provinceId");
 
-                    b.ToTable("DisTrict", (string)null);
+                    b.ToTable("DisTrict");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.EmailGetCode", b =>
@@ -477,7 +477,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailGetCode", (string)null);
+                    b.ToTable("EmailGetCode");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Image", b =>
@@ -498,7 +498,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Image", (string)null);
+                    b.ToTable("Image");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Message", b =>
@@ -527,7 +527,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("To");
 
-                    b.ToTable("Message", (string)null);
+                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Post", b =>
@@ -570,7 +570,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Post", (string)null);
+                    b.ToTable("Post");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Province", b =>
@@ -610,7 +610,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("AdministrativeUnitId");
 
-                    b.ToTable("Province", (string)null);
+                    b.ToTable("Province");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Role", b =>
@@ -668,26 +668,12 @@ namespace StartupNNTM.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Type", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c63bab67-1b5a-4ac2-82a2-3333844543cf"),
-                            CreatedAt = new DateTime(2024, 3, 25, 15, 34, 3, 187, DateTimeKind.Local).AddTicks(7974),
-                            Title = "Chất lượng cao"
-                        },
-                        new
-                        {
-                            Id = new Guid("8a8c80fc-f6bb-4631-b682-14a7f33be54f"),
-                            CreatedAt = new DateTime(2024, 3, 25, 15, 34, 3, 187, DateTimeKind.Local).AddTicks(7991),
-                            Title = "Ngon-bổ-rẻ"
-                        });
+                    b.ToTable("Type");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.User", b =>
@@ -778,7 +764,7 @@ namespace StartupNNTM.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DistrictId")
+                    b.Property<int>("DistrictCode")
                         .HasColumnType("int");
 
                     b.Property<string>("FullName")
@@ -797,40 +783,16 @@ namespace StartupNNTM.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("districtId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AdministrativeUnitId");
 
-                    b.HasIndex("DistrictId");
+                    b.HasIndex("districtId");
 
-                    b.ToTable("Ward", (string)null);
-                });
-
-            modelBuilder.Entity("Address", b =>
-                {
-                    b.HasOne("StartupNNTM.Models.District", "District")
-                        .WithMany("Address")
-                        .HasForeignKey("DistrictId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StartupNNTM.Models.Province", "Province")
-                        .WithMany("Address")
-                        .HasForeignKey("ProvinceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StartupNNTM.Models.Ward", "Ward")
-                        .WithMany("Address")
-                        .HasForeignKey("WardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("District");
-
-                    b.Navigation("Province");
-
-                    b.Navigation("Ward");
+                    b.ToTable("Ward");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -915,7 +877,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasOne("StartupNNTM.Models.Province", "Province")
                         .WithMany("Districts")
-                        .HasForeignKey("ProvinceId")
+                        .HasForeignKey("provinceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -949,7 +911,7 @@ namespace StartupNNTM.Migrations
 
             modelBuilder.Entity("StartupNNTM.Models.Post", b =>
                 {
-                    b.HasOne("Address", "Address")
+                    b.HasOne("AddressVm", "AddressVm")
                         .WithMany("Post")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -967,7 +929,7 @@ namespace StartupNNTM.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
+                    b.Navigation("AddressVm");
 
                     b.Navigation("Type");
                 });
@@ -1001,7 +963,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasOne("StartupNNTM.Models.District", "District")
                         .WithMany("Wards")
-                        .HasForeignKey("DistrictId")
+                        .HasForeignKey("districtId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1010,7 +972,7 @@ namespace StartupNNTM.Migrations
                     b.Navigation("District");
                 });
 
-            modelBuilder.Entity("Address", b =>
+            modelBuilder.Entity("AddressVm", b =>
                 {
                     b.Navigation("Post");
                 });
@@ -1031,8 +993,6 @@ namespace StartupNNTM.Migrations
 
             modelBuilder.Entity("StartupNNTM.Models.District", b =>
                 {
-                    b.Navigation("Address");
-
                     b.Navigation("Wards");
                 });
 
@@ -1050,8 +1010,6 @@ namespace StartupNNTM.Migrations
 
             modelBuilder.Entity("StartupNNTM.Models.Province", b =>
                 {
-                    b.Navigation("Address");
-
                     b.Navigation("Districts");
                 });
 
@@ -1065,11 +1023,6 @@ namespace StartupNNTM.Migrations
                     b.Navigation("Message");
 
                     b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("StartupNNTM.Models.Ward", b =>
-                {
-                    b.Navigation("Address");
                 });
 #pragma warning restore 612, 618
         }

@@ -214,7 +214,7 @@ namespace StartupNNTM.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Address")
+                    b.Property<string>("AddressVm")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

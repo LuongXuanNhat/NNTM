@@ -24,6 +24,7 @@ namespace StartupNNTM.Models
         public DbSet<Province> Provinces { get; set; }
         public DbSet<Ward> Wards { get; set; }
         public DbSet<District> Districts { get; set; }
+        public DbSet<Address> Address { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -57,6 +58,29 @@ namespace StartupNNTM.Models
                 entity.HasMany(e => e.Images).WithOne(e => e.Post).HasForeignKey(e => e.PostId);
             });
 
+            builder.Entity<Province>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.HasOne(e => e.AdministrativeRegion).WithMany(e => e.Province).HasForeignKey(e => e.AdministrativeRegionId);
+                entity.HasOne(e => e.AdministrativeUnit).WithMany(e => e.Province).HasForeignKey(e => e.AdministrativeUnitId);
+                entity.HasMany(e => e.Addresses).WithOne(e => e.Province).HasForeignKey(e => e.ProvinceId);
+            });
+            builder.Entity<Ward>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.HasMany(e => e.Addresses).WithOne(e => e.Ward).HasForeignKey(e => e.WardId);
+                entity.HasOne(e => e.AdministrativeUnit).WithMany(e => e.Wards).HasForeignKey(e => e.AdministrativeUnitId);
+
+            });
+            builder.Entity<District>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.HasOne(e => e.Province).WithMany(e => e.Districts).HasForeignKey(e => e.ProvinceId);
+                entity.HasOne(e => e.AdministrativeUnit).WithMany(e => e.Districts).HasForeignKey(e => e.AdministrativeUnitId);
+                entity.HasMany(e => e.Wards).WithOne(e => e.District).HasForeignKey(e => e.DistrictId);
+                entity.HasMany(e => e.Addresses).WithOne(e => e.District).HasForeignKey(e => e.DistrictId);
+
+            });
 
             builder.Entity<IdentityUserRole<Guid>>().HasKey(x => new { x.UserId, x.RoleId });
 

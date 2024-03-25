@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StartupNNTM.Models;
 
@@ -11,9 +12,11 @@ using StartupNNTM.Models;
 namespace StartupNNTM.Migrations
 {
     [DbContext(typeof(NntmContext))]
-    partial class NntmContextModelSnapshot : ModelSnapshot
+    [Migration("20240325083403_add_data_6")]
+    partial class add_data_6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +52,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("WardId");
 
-                    b.ToTable("Address", (string)null);
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -181,7 +184,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdministrativeRegion", (string)null);
+                    b.ToTable("AdministrativeRegion");
 
                     b.HasData(
                         new
@@ -284,7 +287,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdministrativeUnit", (string)null);
+                    b.ToTable("AdministrativeUnit");
 
                     b.HasData(
                         new
@@ -415,7 +418,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Chat", (string)null);
+                    b.ToTable("Chat");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.District", b =>
@@ -455,7 +458,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("ProvinceId");
 
-                    b.ToTable("DisTrict", (string)null);
+                    b.ToTable("DisTrict");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.EmailGetCode", b =>
@@ -477,7 +480,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailGetCode", (string)null);
+                    b.ToTable("EmailGetCode");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Image", b =>
@@ -498,7 +501,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Image", (string)null);
+                    b.ToTable("Image");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Message", b =>
@@ -527,7 +530,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("To");
 
-                    b.ToTable("Message", (string)null);
+                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Post", b =>
@@ -570,7 +573,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Post", (string)null);
+                    b.ToTable("Post");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Province", b =>
@@ -610,7 +613,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("AdministrativeUnitId");
 
-                    b.ToTable("Province", (string)null);
+                    b.ToTable("Province");
                 });
 
             modelBuilder.Entity("StartupNNTM.Models.Role", b =>
@@ -673,7 +676,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Type", (string)null);
+                    b.ToTable("Type");
 
                     b.HasData(
                         new
@@ -803,7 +806,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasIndex("DistrictId");
 
-                    b.ToTable("Ward", (string)null);
+                    b.ToTable("Ward");
                 });
 
             modelBuilder.Entity("Address", b =>

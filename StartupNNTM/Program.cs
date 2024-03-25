@@ -8,14 +8,16 @@ using Microsoft.OpenApi.Models;
 using StartupNNTM.Models;
 using StartupNNTM.Service;
 using StartupNNTM.ViewModels;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 var connectionString = builder.Environment.IsDevelopment()
-                                 ? builder.Configuration.GetConnectionString("DataConnect")
+                                 ? builder.Configuration.GetConnectionString("LocalDataConnect")
                                  : builder.Configuration.GetConnectionString("DataConnect");
 builder.Services.AddDbContext<NntmContext>(options =>
 {
@@ -26,8 +28,9 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 #region JWT Authentication Configuration
-    string issuer = builder.Configuration.GetValue<string>("Tokens:Issuer");
+string issuer = builder.Configuration.GetValue<string>("Tokens:Issuer");
     string signingKey = builder.Configuration.GetValue<string>("Tokens:Key");
     byte[] signingKeyBytes = System.Text.Encoding.UTF8.GetBytes(signingKey);
 

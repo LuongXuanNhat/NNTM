@@ -9,6 +9,10 @@ namespace StartupNNTM.Mapper
         public AddressMapper()
         {
             CreateMap<ProvinceViewModel, Province>().ReverseMap();
+            CreateMap<District, DistrictViewModel>().ReverseMap();
+            CreateMap<Ward, WardViewModel>().ReverseMap();
+            CreateMap<Address, AddressVm>().ReverseMap();
+            CreateMap<Address, AddressView>().ReverseMap();
         }
     }
 }

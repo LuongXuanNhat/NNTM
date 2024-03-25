@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using StartupNNTM.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace StartupNNTM.Models
 {
@@ -11,6 +13,8 @@ namespace StartupNNTM.Models
         public string Url { get; set; }
         public string PostId { get; set; }
 
+        [JsonIgnore]
         public Post Post { get; set; }
     }
 }
+

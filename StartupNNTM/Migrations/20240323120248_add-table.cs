@@ -20,7 +20,7 @@ namespace StartupNNTM.Migrations
                 table: "Post");
 
             migrationBuilder.RenameColumn(
-                name: "Address",
+                name: "AddressVm",
                 table: "Post",
                 newName: "Price");
 
@@ -47,7 +47,7 @@ namespace StartupNNTM.Migrations
                 defaultValue: "");
 
             migrationBuilder.CreateTable(
-                name: "Address",
+                name: "AddressVm",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -91,7 +91,7 @@ namespace StartupNNTM.Migrations
                 name: "FK_Post_Address_AddressId",
                 table: "Post",
                 column: "AddressId",
-                principalTable: "Address",
+                principalTable: "AddressVm",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }
@@ -104,7 +104,7 @@ namespace StartupNNTM.Migrations
                 table: "Post");
 
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "AddressVm");
 
             migrationBuilder.DropTable(
                 name: "Image");
@@ -124,7 +124,7 @@ namespace StartupNNTM.Migrations
             migrationBuilder.RenameColumn(
                 name: "Price",
                 table: "Post",
-                newName: "Address");
+                newName: "AddressVm");
 
             migrationBuilder.AddColumn<string>(
                 name: "Acreage",

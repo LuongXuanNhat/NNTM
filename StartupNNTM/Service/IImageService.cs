@@ -4,7 +4,7 @@ namespace StartupNNTM.Service
 {
     public interface IImageService
     {
-        Task<byte[]> ConvertFormFileToByteArray(IFormFile formFile);
-        string ConvertByteArrayToString(byte[]? byteArray, Encoding encoding);
+        Task AddImage(ICollection<IFormFile> files, string postId);
+        Task<string> SaveFile(IFormFile file);
     }
 }

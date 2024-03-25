@@ -25,7 +25,7 @@ namespace StartupNNTM.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Address", b =>
+            modelBuilder.Entity("AddressVm", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,7 +37,7 @@ namespace StartupNNTM.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("AddressVm");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -523,7 +523,7 @@ namespace StartupNNTM.Migrations
 
             modelBuilder.Entity("StartupNNTM.Models.Post", b =>
                 {
-                    b.HasOne("Address", "Address")
+                    b.HasOne("AddressVm", "AddressVm")
                         .WithMany("Post")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -541,12 +541,12 @@ namespace StartupNNTM.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
+                    b.Navigation("AddressVm");
 
                     b.Navigation("Type");
                 });
 
-            modelBuilder.Entity("Address", b =>
+            modelBuilder.Entity("AddressVm", b =>
                 {
                     b.Navigation("Post");
                 });
