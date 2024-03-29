@@ -19,7 +19,7 @@ namespace StartupNNTM.Service
             _dataContext = dataContext;
         }
 
-        public async Task AddImage(ICollection<IFormFile> files, string postId)
+        public async Task AddImage(IFormFileCollection files, string postId)
         {
             foreach (var img in files)
             {

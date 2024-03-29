@@ -23,6 +23,7 @@ namespace StartupNNTM.Controllers
         }
 
         [HttpPost("Create")]
+        [Consumes("multipart/form-data")]
         //[Authorize]
         public async Task<IActionResult> CreatePost([FromForm] PostVm post)
         {

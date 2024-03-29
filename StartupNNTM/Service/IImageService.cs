@@ -4,7 +4,7 @@ namespace StartupNNTM.Service
 {
     public interface IImageService
     {
-        Task AddImage(ICollection<IFormFile> files, string postId);
+        Task AddImage(IFormFileCollection files, string postId);
         Task<string> SaveFile(IFormFile file);
     }
 }

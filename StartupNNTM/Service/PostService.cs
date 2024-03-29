@@ -142,9 +142,9 @@ namespace StartupNNTM.Service
                         DistrictId = x.DistrictId,
                         ProvinceId = x.ProvinceId,
                         WardId = x.WardId,
-                        Province = new Province { Id = x.Province.Id, FullName = x.Province.FullName },
-                        District = new District { Id = x.District.Id, FullName = x.District.FullName },
-                        Ward = new Ward { Id = x.Ward.Id, FullName = x.Ward.FullName }
+                        Province = new Province { Id = x.Province.Id, FullName = x.Province.Name },
+                        District = new District { Id = x.District.Id, FullName = x.District.Name },
+                        Ward = new Ward { Id = x.Ward.Id, FullName = x.Ward.Name }
                     })
                     .FirstAsync();
             }
@@ -156,7 +156,32 @@ namespace StartupNNTM.Service
 
         public async Task<ApiResult<PostView>> GetDetail(string id)
         {
+            var images = _dataContext.Images.AsQueryable();
+            var address = _dataContext.Address.AsQueryable();
             var product = await _dataContext.Posts.FirstOrDefaultAsync(x => x.Id.Equals(id));
+
+            product.Images = await images
+                    .Where(x => x.PostId.Equals(product.Id))
+                    .Select(x => new Image { Id = x.Id, Url = x.Url, PostId = x.PostId })
+                    .ToListAsync();
+            product.Address = await address
+                .Where(x => x.Id.Equals(product.AddressId))
+                .Include(a => a.Province)
+                .Include(a => a.District)
+                .Include(a => a.Ward)
+                .Select(x => new Address
+                {
+                    Id = x.Id,
+                    Detail = x.Detail,
+                    DistrictId = x.DistrictId,
+                    ProvinceId = x.ProvinceId,
+                    WardId = x.WardId,
+                    Province = new Province { Id = x.Province.Id, FullName = x.Province.FullName },
+                    District = new District { Id = x.District.Id, FullName = x.District.FullName },
+                    Ward = new Ward { Id = x.Ward.Id, FullName = x.Ward.FullName }
+                })
+                .FirstAsync();
+
             return new ApiSuccessResult<PostView>(_mapper.Map<PostView>(product));
         }
     }

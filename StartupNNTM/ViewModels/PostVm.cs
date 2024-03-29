@@ -11,6 +11,6 @@
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
         public string? UserId { get; set; } = "10760574-9806-4c70-e1c5-08dc4c8baad5";
-        public ICollection<IFormFile> Images { get; set; }
+        public IFormFileCollection Images { get; set; }
     }
 }
