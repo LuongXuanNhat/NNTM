@@ -17,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 var connectionString = builder.Environment.IsDevelopment()
-                                 ? builder.Configuration.GetConnectionString("LocalDataConnect")
+                                 ? builder.Configuration.GetConnectionString("DataConnect")
                                  : builder.Configuration.GetConnectionString("DataConnect");
 builder.Services.AddDbContext<NntmContext>(options =>
 {
@@ -121,6 +121,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
     builder.Services.AddScoped<IPostService, PostService>();
     builder.Services.AddScoped<IImageService, ImageService>();
     builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 

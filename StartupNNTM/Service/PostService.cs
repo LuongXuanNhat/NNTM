@@ -48,6 +48,42 @@ namespace StartupNNTM.Service
             return new ApiSuccessResult<string>(postItem.Id);
         }
 
+     /*   public async Task<ApiResult<bool>> UpdatePost(string postId, PostVm updatedPost)
+        {
+            // Tìm bài đăng cần cập nhật trong cơ sở dữ liệu
+            var existingPost = await _dataContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+
+            if (existingPost == null)
+            {
+                return new ApiErrorResult<bool>("Bài đăng không tồn tại"); // Trả về lỗi nếu bài đăng không tồn tại
+            }
+
+            // Cập nhật thông tin bài đăng từ postVm
+            existingPost.Title = updatedPost.Title;
+            existingPost.Content = updatedPost.Content;
+            existingPost.Price = updatedPost.Price;
+
+            // Cập nhật địa chỉ của bài đăng
+            var updatedAddress = await _address.UpdateAddress(updatedPost.AddressVm);
+
+            if (!updatedAddress.IsSuccessed)
+            {
+                return new ApiErrorResult<bool>("Lỗi khi cập nhật địa chỉ"); // Trả về lỗi nếu có lỗi khi cập nhật địa chỉ
+            }
+
+            // Xóa hình ảnh cũ của bài đăng
+            await _image.DeleteChangedImagesByPostId(postId,updatedPost.Images);
+
+            // Thêm hình ảnh mới cho bài đăng
+            await _image.AddImage(updatedPost.Images, postId);
+
+            // Lưu các thay đổi vào cơ sở dữ liệu
+            await _dataContext.SaveChangesAsync();
+
+            return new ApiSuccessResult<bool>(true); // Trả về kết quả thành công
+        }
+
+*/
         private string SanitizeString(string title)
         {
             string withoutDiacritics = RemoveDiacritics(title).ToLower().Trim();

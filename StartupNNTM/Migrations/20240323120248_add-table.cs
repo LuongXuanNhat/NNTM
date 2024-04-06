@@ -19,10 +19,7 @@ namespace StartupNNTM.Migrations
                 name: "IsActivate",
                 table: "Post");
 
-            migrationBuilder.RenameColumn(
-                name: "AddressVm",
-                table: "Post",
-                newName: "Price");
+       
 
             migrationBuilder.AddColumn<Guid>(
                 name: "AddressId",

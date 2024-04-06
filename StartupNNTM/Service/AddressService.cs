@@ -27,6 +27,28 @@ namespace StartupNNTM.Service
             return new ApiSuccessResult<Guid>(item.Id);
         }
 
+        public async Task<ApiResult<bool>> UpdateAddress(AddressVm updatedAddress)
+        {
+            var existingAddress = await _dataContext.Address.FirstOrDefaultAsync(a => a.Id == updatedAddress.Id);
+
+            if (existingAddress == null)
+            {
+                AddAddress(updatedAddress);
+            }
+
+            existingAddress.ProvinceId = updatedAddress.ProvinceId;
+            existingAddress.DistrictId = updatedAddress.DistrictId;
+            existingAddress.WardId = updatedAddress.WardId;
+            existingAddress.Detail = updatedAddress.Detail;
+
+            // Lưu các thay đổi vào cơ sở dữ liệu
+            await _dataContext.SaveChangesAsync();
+
+
+            return new ApiSuccessResult<bool>(true); // Trả về kết quả thành công
+        }
+
+
         public async Task<ApiResult<List<ProvinceViewModel>>> GetAll()
         {
             var provinces = await _dataContext.Provinces.ToListAsync();

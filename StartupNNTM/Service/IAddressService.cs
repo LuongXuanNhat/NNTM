@@ -11,5 +11,6 @@ namespace StartupNNTM.Service
         Task<ApiResult<Guid>> AddAddress(AddressVm address);
         Task<ApiResult<List<DistrictViewModel>>> GetDistrictsById(string provincesId);
         Task<ApiResult<List<WardViewModel>>> GetWardsById(string districtId);
+        Task<ApiResult<bool>> UpdateAddress(AddressVm address);
     }
 }

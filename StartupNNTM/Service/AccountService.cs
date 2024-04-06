@@ -47,7 +47,7 @@ namespace StartupNNTM.Service
             {
                 { () => user == null, "Tài khoản không tồn tại" },
                 { () => user.LockoutEnabled && user.AccessFailedCount == -1, "Tài khoản bị khóa vĩnh viễn" },
-                { () => !user.LockoutEnabled, "Tài khoản bị khóa" },
+                { () => user.LockoutEnabled, "Tài khoản bị khóa" },
                 { () => true, "ok" },
             };
             var errorMessage = errorMessages.First(kv => kv.Key()).Value;

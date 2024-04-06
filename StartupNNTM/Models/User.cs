@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using StartupNNTM.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StartupNNTM.Models
@@ -9,7 +10,14 @@ namespace StartupNNTM.Models
         public string Fullname { get; set; }
         public DateTime DateOfBirth { get; set; }
         public bool Status { get; set; }
+        public Gender Gender { get; set; }
+
+        public string PhoneNumber { get; set; }
+        public byte[] Image { get; set; }
+        public Guid AddressId { get; set; }
         public ICollection<Message> Message { get; set; }
         public ICollection<Post> Post { get;}
+        public Address Address { get; set; }
+
     }
 }
