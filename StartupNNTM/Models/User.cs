@@ -12,8 +12,11 @@ namespace StartupNNTM.Models
         public bool Status { get; set; }
         public Gender Gender { get; set; }
 
+        public string Introduction { get; set; }
+
         public string PhoneNumber { get; set; }
-        public byte[] Image { get; set; }
+        public string Image { get; set; } = string.Empty;
+
         public Guid AddressId { get; set; }
         public ICollection<Message> Message { get; set; }
         public ICollection<Post> Post { get;}

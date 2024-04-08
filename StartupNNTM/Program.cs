@@ -121,6 +121,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
     builder.Services.AddScoped<IPostService, PostService>();
     builder.Services.AddScoped<IImageService, ImageService>();
     builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

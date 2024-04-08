@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using StartupNNTM.Models;
 using StartupNNTM.ViewModels;
 using System.Text;
@@ -18,6 +19,7 @@ namespace StartupNNTM.Service
         private readonly NntmContext _dataContext;
         private readonly IMapper _mapper;
         private readonly IAddressService _address;
+        private readonly IStorageService _storage;
 
 
 
@@ -25,7 +27,7 @@ namespace StartupNNTM.Service
        IAddressService address,
         UserManager<User> userManager,
         IMapper mapper,
-
+        IStorageService storage,
         IImageService image
             )
         {
@@ -35,6 +37,7 @@ namespace StartupNNTM.Service
             _dataContext = context;
             _mapper = mapper;
             _address = address;
+            _storage = storage;
         }
 
         public async Task<ApiResult<UserViewModel>> GetUserDetail(string email)
@@ -44,38 +47,52 @@ namespace StartupNNTM.Service
 
             if (user == null)
                 return new ApiErrorResult<UserViewModel>("Lỗi");
+            if (user.AddressId != Guid.Empty)
+            {
+                user.Address = await address
+  .Where(x => x.Id.Equals(user.AddressId))
+  .Include(a => a.Province)
+  .Include(a => a.District)
+  .Include(a => a.Ward)
+  .Select(x => new Address
+  {
+      Id = x.Id,
+      Detail = x.Detail,
+      DistrictId = x.DistrictId,
+      ProvinceId = x.ProvinceId,
+      WardId = x.WardId,
+      Province = new Province { Id = x.Province.Id, FullName = x.Province.FullName },
+      District = new District { Id = x.District.Id, FullName = x.District.FullName },
+      Ward = new Ward { Id = x.Ward.Id, FullName = x.Ward.FullName }
+  })
+  .FirstAsync();
+            }
+            else
+                user.Address = null;
+         
 
-            user.Address = await address
-           .Where(x => x.Id.Equals(user.AddressId))
-           .Include(a => a.Province)
-           .Include(a => a.District)
-           .Include(a => a.Ward)
-           .Select(x => new Address
-           {
-               Id = x.Id,
-               Detail = x.Detail,
-               DistrictId = x.DistrictId,
-               ProvinceId = x.ProvinceId,
-               WardId = x.WardId,
-               Province = new Province { Id = x.Province.Id, FullName = x.Province.FullName },
-               District = new District { Id = x.District.Id, FullName = x.District.FullName },
-               Ward = new Ward { Id = x.Ward.Id, FullName = x.Ward.FullName }
-           })
-           .FirstAsync();
+
             var userDetail = _mapper.Map<UserViewModel>(user);
             return new ApiSuccessResult<UserViewModel>(userDetail);
         }
 
+
+
         public async Task<ApiResult<string>> GetImage(string email)
         {
-            var user = await _userManager.FindByNameAsync(email);
-            return new ApiSuccessResult<string>(_image.ConvertByteArrayToString(user.Image, Encoding.UTF8));
+            var user = await _dataContext.User.FirstOrDefaultAsync(x => x.Email.Equals(email));
+            if (user is null) return new ApiSuccessResult<string>(string.Empty);
+            return new ApiSuccessResult<string>(user.Image);
         }
 
-        public async Task<ApiResult<string>> SetImageUser(string name, IFormFile image)
+        public async Task<ApiResult<string>> SetImageUser(string email, IFormFile image)
         {
-            var user = await _userManager.FindByNameAsync(name);
-            user.Image = await _image.ConvertFormFileToByteArray(image);
+            var user = await _dataContext.User.FirstOrDefaultAsync(x => x.Email.Equals(email));
+            if (user.Image != string.Empty)
+            {
+                await _storage.DeleteFileAsync(user.Image);
+            }
+            user.Image = await _image.SaveFile(image);
             _dataContext.User.Update(user);
             await _dataContext.SaveChangesAsync();
             return new ApiSuccessResult<string>("Cập nhập ảnh đại diện thành công");
@@ -88,6 +105,7 @@ namespace StartupNNTM.Service
             var user = await _userManager.FindByEmailAsync(request.Email);
             var address = await _address.AddAddress(request.AddressVm);
 
+            user.Fullname = request.Fullname;   
             user.PhoneNumber = request.PhoneNumber;
             user.DateOfBirth = request.DateOfBirth;
             user.Gender = request.Gender;

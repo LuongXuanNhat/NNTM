@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StartupNNTM.Models;
 
@@ -11,9 +12,11 @@ using StartupNNTM.Models;
 namespace StartupNNTM.Migrations
 {
     [DbContext(typeof(NntmContext))]
-    partial class NntmContextModelSnapshot : ModelSnapshot
+    [Migration("20240407071551_update table-user1")]
+    partial class updatetableuser1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -679,13 +682,13 @@ namespace StartupNNTM.Migrations
                         new
                         {
                             Id = new Guid("c63bab67-1b5a-4ac2-82a2-3333844543cf"),
-                            CreatedAt = new DateTime(2024, 4, 7, 16, 7, 6, 169, DateTimeKind.Local).AddTicks(256),
+                            CreatedAt = new DateTime(2024, 4, 7, 14, 15, 50, 611, DateTimeKind.Local).AddTicks(7543),
                             Title = "Chất lượng cao"
                         },
                         new
                         {
                             Id = new Guid("8a8c80fc-f6bb-4631-b682-14a7f33be54f"),
-                            CreatedAt = new DateTime(2024, 4, 7, 16, 7, 6, 169, DateTimeKind.Local).AddTicks(267),
+                            CreatedAt = new DateTime(2024, 4, 7, 14, 15, 50, 611, DateTimeKind.Local).AddTicks(7553),
                             Title = "Ngon-bổ-rẻ"
                         });
                 });
@@ -723,9 +726,9 @@ namespace StartupNNTM.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
-                    b.Property<string>("Image")
+                    b.Property<byte[]>("Image")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Introduction")
                         .IsRequired()
