@@ -20,6 +20,8 @@ namespace StartupNNTM.Models
         public Guid AddressId { get; set; }
         public ICollection<Message> Message { get; set; }
         public ICollection<Post> Post { get;}
+
+        public ICollection<Feedback> Feedback { get; set; }
         public Address Address { get; set; }
 
     }

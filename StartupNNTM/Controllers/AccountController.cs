@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using StartupNNTM.Service;
 using StartupNNTM.ViewModels;
+using Microsoft.AspNetCore.Authentication.OAuth;
 
 namespace StartupNNTM.Controllers
 {
@@ -15,6 +16,7 @@ namespace StartupNNTM.Controllers
     {
         private readonly IAccountService _account;
         private readonly IDistributedCache _cache;
+
         public AccountController(IAccountService account, IDistributedCache cache)
         {
             _account = account;
@@ -22,6 +24,7 @@ namespace StartupNNTM.Controllers
         }
 
         [HttpPost("Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody]LoginRequest request)
         {
             var result = await _account.Authenticate(request);
@@ -49,6 +52,10 @@ namespace StartupNNTM.Controllers
             await _cache.SetStringAsync("my_token_key", SystemConstants.Token, cacheOptions);
             return Ok(result);
         }
+
+       
+
+
         [HttpGet("Logout")]
         [Authorize]
         public async Task<IActionResult> Logout()

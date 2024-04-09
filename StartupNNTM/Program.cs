@@ -24,9 +24,11 @@ builder.Services.AddDbContext<NntmContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
+    
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 
 #region JWT Authentication Configuration
@@ -76,7 +78,7 @@ builder.Services
 #region  SwaggerGen Configuration
     builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger VietNamHistory Solution", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger Noviso Solution", Version = "v1" });
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -123,6 +125,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
     builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
     builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 
@@ -140,7 +143,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy( builder =>
     {
-        builder.WithOrigins("http://localhost:4200", "https://noviso.com.vn", "https://localhost:4200")
+        builder.WithOrigins("http://localhost:4200", "https://noviso.com.vn", "https://localhost:4200", "https://novisoapi.com")
                .AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials();
@@ -154,11 +157,28 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseForwardedHeaders();
+
+
+
+
 app.Use(async (context, next) =>
 {
     app.Logger.LogInformation("Request RemoteIp: {RemoteIpAddress}",
         context.Connection.RemoteIpAddress);
     await next(context);
+});
+
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        context.Response.Redirect("/swagger/index.html");
+        return;
+    }
+
+    await next();
 });
 app.UseStaticFiles();
 app.UseForwardedHeaders();
@@ -169,4 +189,10 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.UseCookiePolicy(
+    new CookiePolicyOptions()
+        {
+        MinimumSameSitePolicy = SameSiteMode.Lax
+    });
+
 app.Run();

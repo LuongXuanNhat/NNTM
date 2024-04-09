@@ -62,6 +62,7 @@ namespace StartupNNTM.Migrations
                 {
                     { new Guid("8a8c80fc-f6bb-4631-b682-14a7f33be54f"), new DateTime(2024, 3, 25, 11, 17, 11, 19, DateTimeKind.Local).AddTicks(2106), "Ngon-bổ-rẻ", null },
                     { new Guid("c63bab67-1b5a-4ac2-82a2-3333844543cf"), new DateTime(2024, 3, 25, 11, 17, 11, 19, DateTimeKind.Local).AddTicks(2091), "Chất lượng cao", null }
+             
                 });
 
             migrationBuilder.CreateIndex(

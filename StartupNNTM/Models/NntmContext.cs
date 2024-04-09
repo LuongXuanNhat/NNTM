@@ -25,6 +25,9 @@ namespace StartupNNTM.Models
         public DbSet<Ward> Wards { get; set; }
         public DbSet<District> Districts { get; set; }
         public DbSet<Address> Address { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<TopicFeedback> TopicFeedbacks { get; set; }
+        public DbSet<TypeFeedback> TypeFeedbacks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
