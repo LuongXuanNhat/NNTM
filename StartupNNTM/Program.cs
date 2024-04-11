@@ -24,7 +24,36 @@ builder.Services.AddDbContext<NntmContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
-    
+#region Service
+
+builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<NntmContext>().AddDefaultTokenProviders();
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Lockout.AllowedForNewUsers = false;
+});
+// builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddOptions();
+builder.Services.AddSession();
+var mailsettings = builder.Configuration.GetSection("MailSettings");
+builder.Services.Configure<MailSettings>(mailsettings);
+builder.Services.AddSingleton<ISendMailService, SendMailService>();
+
+#endregion
+
+
+
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -111,33 +140,6 @@ builder.Services
 });
 #endregion
 
-#region Service
-
-builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<NntmContext>().AddDefaultTokenProviders();
-    builder.Services.Configure<IdentityOptions>(options =>
-    {
-        options.Lockout.AllowedForNewUsers = false;
-    });
-// builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddScoped<IAccountService, AccountService>();
-    builder.Services.AddScoped<IPostService, PostService>();
-    builder.Services.AddScoped<IImageService, ImageService>();
-    builder.Services.AddScoped<IAddressService, AddressService>();
-builder.Services.AddScoped<IStorageService, StorageService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IFeedbackService, FeedbackService>();
-    builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
-
-
-builder.Services.AddDistributedMemoryCache();
-    builder.Services.AddOptions();
-    builder.Services.AddSession();
-    var mailsettings = builder.Configuration.GetSection("MailSettings");
-    builder.Services.Configure<MailSettings>(mailsettings);
-    builder.Services.AddSingleton<ISendMailService, SendMailService>();
-
-#endregion
 
 builder.Services.AddCors(options =>
 {
